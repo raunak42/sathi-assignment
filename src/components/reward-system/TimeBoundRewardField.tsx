@@ -1,4 +1,4 @@
-import { addDays, format, startOfDay, startOfMonth } from "date-fns";
+import { addDays, format, isSameMonth, startOfDay, startOfMonth } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeftIcon,
@@ -41,7 +41,7 @@ export const TimeBoundRewardField: React.FC<TimeBoundRewardFieldProps> = ({
       month_caption:
         "relative flex h-[32px] w-full items-center justify-center px-[48px]",
       caption_label:
-        "font-medium text-[16px] leading-[140%] text-[#303030]",
+        "font-medium text-[14px] leading-[140%] text-[#303030]",
       weekdays: "mt-[10px] flex",
       weekday:
         "h-[24px] w-[36px] font-normal text-[14px] leading-[140%] text-[#616161]",
@@ -206,9 +206,10 @@ export const TimeBoundRewardField: React.FC<TimeBoundRewardFieldProps> = ({
                   </button>
                 </PopoverTrigger>
                 <PopoverContent
+                  portalled={false}
                   side="bottom"
                   align="start"
-                  sideOffset={6}
+                  sideOffset={0}
                   avoidCollisions={false}
                   className="z-[90] w-[284px] rounded-[12px] border border-[#E3E3E3] bg-white p-0 shadow-[0px_12px_30px_0px_#00000026] ring-0"
                 >
@@ -218,7 +219,10 @@ export const TimeBoundRewardField: React.FC<TimeBoundRewardFieldProps> = ({
                     month={visibleMonth}
                     onMonthChange={setVisibleMonth}
                     startMonth={startOfMonth(minimumSelectableDate)}
-                    disabled={(date) => date < minimumSelectableDate}
+                    disabled={(date) =>
+                      date < minimumSelectableDate ||
+                      !isSameMonth(date, visibleMonth)
+                    }
                     className="w-full bg-white p-[16px]"
                     classNames={calendarClassNames}
                     components={{
