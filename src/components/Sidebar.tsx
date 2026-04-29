@@ -1,8 +1,7 @@
 import clsx from "clsx";
-import { useState } from "react";
 
 export const Sidebar: React.FC = () => {
-  const [activeOption, setActiveOption] = useState(sidebarOptions[0].option);
+  const activeOption = "Gamification";
   const isSettingsActive = activeOption === settingsOption.option;
 
   return (
@@ -16,11 +15,12 @@ export const Sidebar: React.FC = () => {
             return (
               <a
                 key={option}
-                onClick={() => setActiveOption(option)}
                 className={clsx(
-                  "group hover:cursor-pointer w-full h-[36px] p-[8px] flex items-center justify-start gap-[8px] rounded-[10px] transition-all duration-150 ease-out hover:bg-[#FFFDFF]/70 active:scale-[0.96] -----active:shadow-[0_6px_18px_rgba(197,48,197,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C530C5]/20",
+                  "group w-full h-[36px] p-[8px] flex items-center justify-start gap-[8px] rounded-[10px] transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C530C5]/20",
                   {
                     "bg-[#FFFDFF]": isActive,
+                    "hover:bg-[#FFFDFF]/70 hover:cursor-pointer active:scale-[0.96]": isActive,
+                    "cursor-not-allowed": !isActive,
                   },
                 )}
               >
@@ -46,11 +46,12 @@ export const Sidebar: React.FC = () => {
           })}
         </div>
         <a
-          onClick={() => setActiveOption(settingsOption.option)}
           className={clsx(
-            "group hover:cursor-pointer w-full h-[36px] p-[8px] flex items-center justify-start gap-[8px] rounded-[10px] transition-all duration-150 ease-out hover:bg-[#FFFDFF]/70 active:scale-[0.96] -----active:shadow-[0_6px_18px_rgba(197,48,197,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C530C5]/20",
+            "group w-full h-[36px] p-[8px] flex items-center justify-start gap-[8px] rounded-[10px] transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C530C5]/20",
             {
               "bg-[#FFFDFF]": isSettingsActive,
+              "hover:bg-[#FFFDFF]/70 hover:cursor-pointer active:scale-[0.96]": isSettingsActive,
+              "cursor-not-allowed": !isSettingsActive,
             },
           )}
         >

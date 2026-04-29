@@ -68,7 +68,7 @@ export const NotificationToast: React.FC<NotificationToastProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full text-[#616161] transition-colors duration-150 hover:cursor-pointer hover:bg-[#F5F5F5] hover:text-[#303030]"
+              className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-full text-[#616161] transition-colors duration-150 hover:cursor-pointer hover:bg-[#F5F5F5] hover:text-[#303030]"
               aria-label="Close notification"
             >
               <XIcon className="h-[14px] w-[14px]" strokeWidth={2.2} />

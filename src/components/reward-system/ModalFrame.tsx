@@ -37,11 +37,11 @@ export const ModalFrame: React.FC<ModalFrameProps> = ({
               exit={{ opacity: 0, y: 12, scale: 0.97 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
-              <div className="w-full flex items-center justify-between">
+              <div className="relative z-[120] w-full flex items-center justify-between">
                 <h2 className="font-medium text-[20px] leading-[140%]">{title}</h2>
                 <button
                   onClick={onClose}
-                  className="rounded-full transition-all duration-150 ease-out hover:bg-[#F5F5F5] active:scale-95"
+                  className="relative z-[120] flex h-[32px] w-[32px] items-center justify-center rounded-full transition-all duration-150 ease-out hover:cursor-pointer hover:bg-[#F5F5F5] active:scale-95"
                 >
                   <img
                     alt={closeAlt}
