@@ -35,7 +35,7 @@ export const MainContent: React.FC = () => {
                 </p>
                 <Button
                   onClick={() => setIsModalOpen(true)}
-                  className="w-[310px] min-h-[40px] bg-[#C530C5] rounded-[16px] mt-[24px] hover:bg-[#B82BB8] active:shadow-[0_6px_18px_rgba(197,48,197,0.18)] focus-visible:ring-2 focus-visible:ring-[#C530C5]/30"
+                  className="!rounded-[10px] w-[310px] min-h-[40px] bg-[#C530C5] rounded-[16px] mt-[24px] hover:bg-[#B82BB8] active:shadow-[0_6px_18px_rgba(197,48,197,0.18)] focus-visible:ring-2 focus-visible:ring-[#C530C5]/30"
                 >
                   <p className="font-normal text-[16px] leading-[140%] text-[#FFFFFF]">
                     Enable Gamification
