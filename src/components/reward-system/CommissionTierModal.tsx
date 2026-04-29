@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import clsx from "clsx";
 import { Button } from "../Button";
 import { DisabledActionTooltip } from "../ui/disabled-action-tooltip";
@@ -23,6 +23,7 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [draftCommissionTier, setDraftCommissionTier] =
     useState(commissionTier);
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
   const [highlightedCommissionTierIndex, setHighlightedCommissionTierIndex] =
     useState(() => {
       const selectedCommissionTierIndex = commissionTierOptions.findIndex(
@@ -37,6 +38,12 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
   };
 
   const isSaveDisabled = !draftCommissionTier;
+
+  const focusSaveButton = () => {
+    window.requestAnimationFrame(() => {
+      saveButtonRef.current?.focus();
+    });
+  };
 
   const handleSave = () => {
     if (!draftCommissionTier) {
@@ -107,6 +114,7 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
                       onClick={() => {
                         setDraftCommissionTier(tier);
                         setIsDropdownOpen(false);
+                        focusSaveButton();
                       }}
                       onMouseEnter={() =>
                         setHighlightedCommissionTierIndex(index)
@@ -156,6 +164,7 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
             className="flex-1"
           >
             <Button
+              ref={saveButtonRef}
               onClick={handleSave}
               pressAnimationDelayMs={110}
               disabled={isSaveDisabled}

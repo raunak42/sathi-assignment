@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { forwardRef } from "react";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -9,14 +10,14 @@ type ButtonProps = {
   pressAnimationDelayMs?: number;
 };
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   className = "",
   onClick,
   disabled = false,
   type = "button",
   pressAnimationDelayMs = 0,
-}) => {
+}, ref) => {
   const handleClick = () => {
     if (!onClick) {
       return;
@@ -34,6 +35,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <motion.button
+      ref={ref}
       type={type}
       onClick={handleClick}
       disabled={disabled}
@@ -44,4 +46,6 @@ export const Button: React.FC<ButtonProps> = ({
       {children}
     </motion.button>
   );
-};
+});
+
+Button.displayName = "Button";

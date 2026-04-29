@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { type KeyboardEvent, useState } from "react";
+import { type KeyboardEvent, useRef, useState } from "react";
 import clsx from "clsx";
 import { Button } from "../Button";
 import { DisabledActionTooltip } from "../ui/disabled-action-tooltip";
@@ -40,6 +40,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
   const [isDurationOpen, setIsDurationOpen] = useState(false);
   const [highlightedRewardEventIndex, setHighlightedRewardEventIndex] =
     useState(0);
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
   const [highlightedDurationIndex, setHighlightedDurationIndex] = useState(-1);
 
   const selectedRewardEventIndex = rewardEvents.findIndex(
@@ -108,6 +109,12 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                 ? "Select duration to continue"
                 : "Fill the required fields to continue")
           : "Fill the required fields to continue";
+
+  const focusSaveButton = () => {
+    window.requestAnimationFrame(() => {
+      saveButtonRef.current?.focus();
+    });
+  };
 
   const handleSave = () => {
     onRewardDetailsSave({
@@ -211,7 +218,13 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                     <button
                       aria-selected={rewardEvent === event}
                       id={`reward-event-${index}`}
-                      onClick={() => onRewardEventChange(event)}
+                      onClick={() => {
+                        onRewardEventChange(event);
+
+                        if (event === "Is Onboarded") {
+                          focusSaveButton();
+                        }
+                      }}
                       onMouseEnter={() => setHighlightedRewardEventIndex(index)}
                       role="option"
                       className={clsx(
@@ -406,6 +419,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                                         onClick={() => {
                                           setDraftDuration(duration);
                                           setIsDurationOpen(false);
+                                          focusSaveButton();
                                         }}
                                         onMouseEnter={() =>
                                           setHighlightedDurationIndex(index)
@@ -467,6 +481,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                     className="flex-1"
                   >
                     <Button
+                      ref={saveButtonRef}
                       onClick={handleSave}
                       pressAnimationDelayMs={110}
                       disabled={isRewardEventSaveDisabled}
