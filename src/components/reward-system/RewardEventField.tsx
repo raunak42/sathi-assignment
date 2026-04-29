@@ -125,7 +125,57 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
     closeRewardEventDropdown();
   };
 
+  const openDurationDropdown = () => {
+    const selectedDurationIndex = durationOptions.findIndex(
+      (duration) => duration === draftDuration,
+    );
+
+    setHighlightedDurationIndex(
+      selectedDurationIndex >= 0 ? selectedDurationIndex : 0,
+    );
+    setIsDurationOpen(true);
+  };
+
+  const handleSelectDuration = (selectedDuration: string) => {
+    setDraftDuration(selectedDuration);
+    setIsDurationOpen(false);
+    focusSaveButton();
+  };
+
   const handleRewardEventKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (isDurationOpen) {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setHighlightedDurationIndex((currentIndex) =>
+          currentIndex < 0 ? 0 : (currentIndex + 1) % durationOptions.length,
+        );
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setHighlightedDurationIndex((currentIndex) =>
+          currentIndex < 0
+            ? durationOptions.length - 1
+            : (currentIndex - 1 + durationOptions.length) % durationOptions.length,
+        );
+      }
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+
+        const nextIndex =
+          highlightedDurationIndex >= 0 ? highlightedDurationIndex : 0;
+        handleSelectDuration(durationOptions[nextIndex]);
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsDurationOpen(false);
+      }
+
+      return;
+    }
+
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setIsRewardEventOpen(true);
@@ -365,9 +415,72 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                           </div>
                           <div className="relative">
                             <button
-                              onClick={() =>
-                                setIsDurationOpen((isOpen) => !isOpen)
-                              }
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+
+                                if (isDurationOpen) {
+                                  setIsDurationOpen(false);
+                                  return;
+                                }
+
+                                openDurationDropdown();
+                              }}
+                              onKeyDown={(event) => {
+                                event.stopPropagation();
+
+                                if (isDurationOpen) {
+                                  if (event.key === "ArrowDown") {
+                                    event.preventDefault();
+                                    setHighlightedDurationIndex((currentIndex) =>
+                                      currentIndex < 0
+                                        ? 0
+                                        : (currentIndex + 1) % durationOptions.length,
+                                    );
+                                  }
+
+                                  if (event.key === "ArrowUp") {
+                                    event.preventDefault();
+                                    setHighlightedDurationIndex((currentIndex) =>
+                                      currentIndex < 0
+                                        ? durationOptions.length - 1
+                                        : (currentIndex - 1 + durationOptions.length) %
+                                          durationOptions.length,
+                                    );
+                                  }
+
+                                  if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    const nextIndex =
+                                      highlightedDurationIndex >= 0
+                                        ? highlightedDurationIndex
+                                        : 0;
+                                    handleSelectDuration(durationOptions[nextIndex]);
+                                  }
+
+                                  if (event.key === "Escape") {
+                                    event.preventDefault();
+                                    setIsDurationOpen(false);
+                                  }
+
+                                  return;
+                                }
+
+                                if (
+                                  event.key === "Enter" ||
+                                  event.key === " " ||
+                                  event.key === "ArrowDown" ||
+                                  event.key === "ArrowUp"
+                                ) {
+                                  event.preventDefault();
+                                  openDurationDropdown();
+                                }
+
+                                if (event.key === "Escape") {
+                                  event.preventDefault();
+                                  setIsDurationOpen(false);
+                                }
+                              }}
                               className={clsx(
                                 "w-full flex h-[40px] items-center justify-between rounded-[8px] bg-white px-[10px] font-normal text-[16px] leading-[140%]",
                                 {
@@ -416,10 +529,10 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                                     {durationOptions.map((duration, index) => (
                                       <button
                                         key={duration}
-                                        onClick={() => {
-                                          setDraftDuration(duration);
-                                          setIsDurationOpen(false);
-                                          focusSaveButton();
+                                        type="button"
+                                        onClick={(event) => {
+                                          event.stopPropagation();
+                                          handleSelectDuration(duration);
                                         }}
                                         onMouseEnter={() =>
                                           setHighlightedDurationIndex(index)

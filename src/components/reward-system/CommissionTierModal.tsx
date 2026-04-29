@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { type KeyboardEvent, useRef, useState } from "react";
 import clsx from "clsx";
 import { Button } from "../Button";
 import { DisabledActionTooltip } from "../ui/disabled-action-tooltip";
@@ -20,7 +20,7 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [draftCommissionTier, setDraftCommissionTier] =
     useState(commissionTier);
   const saveButtonRef = useRef<HTMLButtonElement>(null);
@@ -45,14 +45,81 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
     });
   };
 
+  const openCommissionTierDropdown = () => {
+    const selectedCommissionTierIndex = commissionTierOptions.findIndex(
+      (tier) => tier === draftCommissionTier,
+    );
+
+    setHighlightedCommissionTierIndex(
+      selectedCommissionTierIndex >= 0 ? selectedCommissionTierIndex : 0,
+    );
+    setIsDropdownOpen(true);
+  };
+
+  const handleSelectCommissionTier = (tier: string) => {
+    setDraftCommissionTier(tier);
+    setIsDropdownOpen(false);
+    focusSaveButton();
+  };
+
   const handleSave = () => {
     if (!draftCommissionTier) {
-      setIsDropdownOpen(true);
+      openCommissionTierDropdown();
       return;
     }
 
     setIsDropdownOpen(false);
     onSave(draftCommissionTier);
+  };
+
+  const handleCommissionTierKeyDown = (
+    event: KeyboardEvent<HTMLDivElement>,
+  ) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+
+      if (!isDropdownOpen) {
+        openCommissionTierDropdown();
+        return;
+      }
+
+      setHighlightedCommissionTierIndex(
+        (currentIndex) => (currentIndex + 1) % commissionTierOptions.length,
+      );
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+
+      if (!isDropdownOpen) {
+        openCommissionTierDropdown();
+        return;
+      }
+
+      setHighlightedCommissionTierIndex(
+        (currentIndex) =>
+          (currentIndex - 1 + commissionTierOptions.length) %
+          commissionTierOptions.length,
+      );
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+
+      if (!isDropdownOpen) {
+        openCommissionTierDropdown();
+        return;
+      }
+
+      handleSelectCommissionTier(
+        commissionTierOptions[highlightedCommissionTierIndex],
+      );
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setIsDropdownOpen(false);
+    }
   };
 
   return (
@@ -67,9 +134,20 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
         <h3 className="font-normal text-[14px] leading-[140%] text-[#616161]">
           Upgrade to <span className="text-[#E51C00]">*</span>
         </h3>
-        <div className="relative mt-[8px] w-full">
+        <div
+          className="relative mt-[8px] w-full"
+          onKeyDown={handleCommissionTierKeyDown}
+        >
           <button
-            onClick={() => setIsDropdownOpen((isOpen) => !isOpen)}
+            type="button"
+            onClick={() => {
+              if (isDropdownOpen) {
+                setIsDropdownOpen(false);
+                return;
+              }
+
+              openCommissionTierDropdown();
+            }}
             className={clsx(
               "w-full h-[40px] rounded-[8px] bg-white px-[10px] py-[9px] text-left font-normal text-[16px] leading-[140%] outline-none transition-colors duration-150 flex items-center",
               {
@@ -111,10 +189,9 @@ export const CommissionTierModal: React.FC<CommissionTierModalProps> = ({
                   {commissionTierOptions.map((tier, index) => (
                     <button
                       key={tier}
+                      type="button"
                       onClick={() => {
-                        setDraftCommissionTier(tier);
-                        setIsDropdownOpen(false);
-                        focusSaveButton();
+                        handleSelectCommissionTier(tier);
                       }}
                       onMouseEnter={() =>
                         setHighlightedCommissionTierIndex(index)
