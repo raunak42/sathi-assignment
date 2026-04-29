@@ -124,7 +124,7 @@ export const TimeBoundRewardField: React.FC<TimeBoundRewardFieldProps> = ({
           />
         </button>
       </div>
-      <p className="mt-[4px] w-full whitespace-nowrap font-normal text-[12px] leading-[150%] text-[#616161]">
+      <p className="mt-[4px] w-full pr-[8px] font-normal text-[12px] leading-[150%] text-[#616161]">
         Choose an end date to stop this reward automatically.
       </p>
       <AnimatePresence>
