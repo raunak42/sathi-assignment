@@ -3,6 +3,10 @@ import { type KeyboardEvent, useState } from "react";
 import clsx from "clsx";
 import { Button } from "../Button";
 import { DisabledActionTooltip } from "../ui/disabled-action-tooltip";
+import {
+  getPostCountError,
+  getSalesTargetAmountError,
+} from "@/lib/reward-system-validation";
 
 type RewardEventFieldProps = {
   rewardEvent: string;
@@ -80,14 +84,27 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
     closeRewardEventDropdown();
   };
 
+  const salesTargetAmountError = getSalesTargetAmountError(draftRewardAmount);
+  const postCountError = getPostCountError(draftPostCount);
   const isRewardEventSaveDisabled =
-    (rewardEvent === "Cross $X in sales" && !draftRewardAmount.trim()) ||
+    (rewardEvent === "Cross $X in sales" &&
+      (!draftRewardAmount.trim() || !!salesTargetAmountError)) ||
     (rewardEvent === "Posts X times every Y period" &&
-      (!draftPostCount.trim() || !draftDuration.trim()));
+      (!draftPostCount.trim() || !draftDuration.trim() || !!postCountError));
   const rewardEventSaveTooltipMessage =
-    rewardEvent === "Cross $X in sales" && !draftRewardAmount.trim()
-      ? "Enter the sales target amount to continue"
-      : "Fill the required fields to continue";
+    rewardEvent === "Cross $X in sales"
+      ? salesTargetAmountError ??
+        (!draftRewardAmount.trim()
+          ? "Enter the sales target amount to continue"
+          : "Fill the required fields to continue")
+      : rewardEvent === "Posts X times every Y period"
+        ? postCountError ??
+          (!draftPostCount.trim()
+            ? "Enter the post count to continue"
+            : !draftDuration.trim()
+              ? "Select duration to continue"
+              : "Fill the required fields to continue")
+        : "Fill the required fields to continue";
 
   const handleSave = () => {
     onRewardDetailsSave({
@@ -244,7 +261,13 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                           }}
                         >
                           <motion.div
-                            className="flex h-[40px] w-full items-center rounded-[8px] border-[2px] border-[#C530C5] bg-white"
+                            className={clsx(
+                              "relative flex h-[40px] w-full items-center rounded-[8px] border-[2px] bg-white",
+                              {
+                                "border-[#C530C5]": !salesTargetAmountError,
+                                "border-[#E51C00]": !!salesTargetAmountError,
+                              },
+                            )}
                             initial={{ opacity: 0 }}
                             animate={{
                               opacity: 1,
@@ -294,27 +317,36 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                     {rewardEvent === event &&
                       event === "Posts X times every Y period" && (
                         <div className="mt-[4px] mb-[4px] grid grid-cols-2 gap-[8px]">
-                          <input
-                            autoFocus
-                            value={draftPostCount}
-                            onChange={(event) =>
-                              setDraftPostCount(event.target.value)
-                            }
-                            onKeyDown={(event) => {
-                              event.stopPropagation();
-
-                              if (
-                                event.key === "Enter" &&
-                                !isRewardEventSaveDisabled
-                              ) {
-                                event.preventDefault();
-                                handleSave();
+                          <div className="relative">
+                            <input
+                              autoFocus
+                              value={draftPostCount}
+                              onChange={(event) =>
+                                setDraftPostCount(event.target.value)
                               }
-                            }}
-                            onFocus={(event) => event.target.select()}
-                            placeholder="eg: 4"
-                            className="w-full h-[40px] rounded-[8px] border border-[#E3E3E3] bg-white px-[10px] font-normal text-[16px] leading-[140%] text-[#303030] outline-none placeholder:text-[#B5B5B5] tracking-tight focus:border-[2px] focus:border-[#C530C5]"
-                          />
+                              onKeyDown={(event) => {
+                                event.stopPropagation();
+
+                                if (
+                                  event.key === "Enter" &&
+                                  !isRewardEventSaveDisabled
+                                ) {
+                                  event.preventDefault();
+                                  handleSave();
+                                }
+                              }}
+                              onFocus={(event) => event.target.select()}
+                              placeholder="eg: 4"
+                              className={clsx(
+                                "w-full h-[40px] rounded-[8px] border bg-white px-[10px] font-normal text-[16px] leading-[140%] text-[#303030] outline-none placeholder:text-[#B5B5B5] tracking-tight focus:border-[2px]",
+                                {
+                                  "border-[#E3E3E3] focus:border-[#C530C5]": !postCountError,
+                                  "border-[#E51C00] focus:border-[#E51C00]":
+                                    !!postCountError,
+                                },
+                              )}
+                            />
+                          </div>
                           <div className="relative">
                             <button
                               onClick={() =>

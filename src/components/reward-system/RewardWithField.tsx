@@ -3,6 +3,7 @@ import { type KeyboardEvent, useState } from "react";
 import clsx from "clsx";
 import { Button } from "../Button";
 import { DisabledActionTooltip } from "../ui/disabled-action-tooltip";
+import { getBonusAmountError } from "@/lib/reward-system-validation";
 
 type RewardWithFieldProps = {
   rewardWith: string;
@@ -115,12 +116,15 @@ export const RewardWithField: React.FC<RewardWithFieldProps> = ({
     onOpenCommissionTierModal();
   };
 
+  const bonusAmountError = getBonusAmountError(draftRewardWithAmount);
   const isRewardWithSaveDisabled =
-    rewardWith === "Flat $X bonus" && !draftRewardWithAmount.trim();
+    rewardWith === "Flat $X bonus" &&
+    (!draftRewardWithAmount.trim() || !!bonusAmountError);
   const rewardWithSaveTooltipMessage =
-    rewardWith === "Flat $X bonus" && !draftRewardWithAmount.trim()
+    bonusAmountError ??
+    (rewardWith === "Flat $X bonus" && !draftRewardWithAmount.trim()
       ? "Enter the bonus amount to continue"
-      : "Fill the required fields to continue";
+      : "Fill the required fields to continue");
 
   const handleCancel = () => {
     setDraftRewardWithAmount(rewardWithAmount);
@@ -321,7 +325,13 @@ export const RewardWithField: React.FC<RewardWithFieldProps> = ({
                             }}
                           >
                             <motion.div
-                              className="flex h-[40px] w-full items-center rounded-[8px] border-[2px] border-[#C530C5] bg-white"
+                              className={clsx(
+                                "relative flex h-[40px] w-full items-center rounded-[8px] border-[2px] bg-white",
+                                {
+                                  "border-[#C530C5]": !bonusAmountError,
+                                  "border-[#E51C00]": !!bonusAmountError,
+                                },
+                              )}
                               initial={{ opacity: 0 }}
                               animate={{
                                 opacity: 1,
