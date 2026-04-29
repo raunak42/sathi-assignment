@@ -228,13 +228,15 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
           aria-expanded={isRewardEventOpen}
           aria-haspopup="listbox"
           onClick={handleToggleDropdown}
-          className={`w-full h-[40px] rounded-[8px] bg-white px-[10px] py-[9px] text-left font-normal text-[16px] leading-[140%] outline-none transition-colors duration-150 flex items-center ${
+          className={`flex h-[40px] w-full items-center rounded-[8px] bg-white px-[10px] py-[9px] pr-[32px] text-left font-normal text-[16px] leading-[140%] outline-none transition-colors duration-150 ${
             isRewardEventOpen
               ? "border-[2px] border-[#C530C5]"
               : "border-[1px] border-[#E3E3E3]"
           } ${rewardEvent ? "text-[#303030]" : "text-[#B5B5B5]"}`}
         >
-          {rewardEventLabel}
+          <span className="block w-full min-w-0 truncate">
+            {rewardEventLabel}
+          </span>
         </button>
         <img
           alt="chevron"
@@ -278,7 +280,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                       onMouseEnter={() => setHighlightedRewardEventIndex(index)}
                       role="option"
                       className={clsx(
-                        "hover:cursor-pointer w-full h-[40px] py-[9px] px-[10px] text-left rounded-[8px] flex items-center justify-between transition-all duration-150 ease-out active:scale-[0.99]",
+                        "hover:cursor-pointer w-full min-w-0 h-[40px] py-[9px] px-[10px] text-left rounded-[8px] flex items-center justify-between transition-all duration-150 ease-out active:scale-[0.99]",
                         {
                           "text-[#C530C5] bg-[#FFF5FF]": rewardEvent === event,
                           "bg-[#F5F5F5] text-[#303030]":
@@ -290,7 +292,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                         },
                       )}
                     >
-                      <p className="font-normal text-[16px] leading-[140%]">
+                      <p className="min-w-0 flex-1 pr-[8px] truncate font-normal text-[16px] leading-[140%]">
                         {event}
                       </p>
                       {rewardEvent === event && (
@@ -298,6 +300,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                           alt="check"
                           src="/images/check.png"
                           width={15}
+                          className="shrink-0"
                         ></img>
                       )}
                     </button>
@@ -328,7 +331,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                         >
                           <motion.div
                             className={clsx(
-                              "relative flex h-[40px] w-full items-center rounded-[8px] border-[2px] bg-white",
+                              "relative flex h-[40px] w-full min-w-0 items-center rounded-[8px] border-[2px] bg-white",
                               {
                                 "border-[#C530C5]": !salesTargetAmountError,
                                 "border-[#E51C00]": !!salesTargetAmountError,
@@ -351,7 +354,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                               },
                             }}
                           >
-                            <span className="font-normal text-[16px] leading-[140%] text-[#616161] px-[16px] flex items-center justify-center">
+                            <span className="flex shrink-0 items-center justify-center px-[16px] font-normal text-[16px] leading-[140%] text-[#616161]">
                               $
                             </span>
                             <div className="h-full w-[1px] bg-[#E3E3E3]" />
@@ -374,7 +377,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                               }}
                               onFocus={(event) => event.target.select()}
                               placeholder="e.g. 100"
-                              className="h-full flex-1 bg-transparent px-[16px] font-normal text-[16px] leading-[140%] text-[#303030] outline-none placeholder:text-[#B5B5B5] tracking-tight"
+                              className="h-full min-w-0 flex-1 bg-transparent px-[16px] font-normal text-[16px] leading-[140%] text-[#303030] outline-none placeholder:text-[#B5B5B5] tracking-tight"
                             />
                           </motion.div>
                         </motion.div>
@@ -382,7 +385,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                     </AnimatePresence>
                     {rewardEvent === event &&
                       event === "Posts X times every Y period" && (
-                        <div className="mt-[4px] mb-[4px] grid grid-cols-2 gap-[8px]">
+                        <div className="mt-[4px] mb-[4px] grid grid-cols-1 gap-[8px] min-[340px]:grid-cols-2">
                           <div className="relative">
                             <input
                               autoFocus
@@ -493,7 +496,9 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                                 },
                               )}
                             >
-                              {draftDuration || "Select duration"}
+                              <span className="block min-w-0 flex-1 truncate pr-[8px] text-left">
+                                {draftDuration || "Select duration"}
+                              </span>
                               <img
                                 alt="chevron"
                                 src="/images/chevron.png"
@@ -538,7 +543,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                                           setHighlightedDurationIndex(index)
                                         }
                                         className={clsx(
-                                          "hover:cursor-pointer w-full h-[40px] py-[9px] px-[10px] text-left rounded-[8px] flex items-center justify-between transition-all duration-150 ease-out active:scale-[0.99]",
+                                          "hover:cursor-pointer w-full min-w-0 h-[40px] py-[9px] px-[10px] text-left rounded-[8px] flex items-center justify-between transition-all duration-150 ease-out active:scale-[0.99]",
                                           {
                                             "text-[#C530C5] bg-[#FFF5FF]":
                                               draftDuration === duration,
@@ -553,7 +558,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                                           },
                                         )}
                                       >
-                                        <p className="font-normal text-[16px] leading-[140%]">
+                                        <p className="min-w-0 flex-1 pr-[8px] truncate font-normal text-[16px] leading-[140%]">
                                           {duration}
                                         </p>
                                         {draftDuration === duration && (
@@ -561,6 +566,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                                             alt="check"
                                             src="/images/check.png"
                                             width={15}
+                                            className="shrink-0"
                                           ></img>
                                         )}
                                       </button>
@@ -575,7 +581,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                   </div>
                 ))}
                 <div
-                  className="mt-[8px] flex gap-[8px]"
+                  className="mt-[8px] grid grid-cols-1 gap-[8px] min-[340px]:grid-cols-2"
                   onKeyDown={(event) => event.stopPropagation()}
                   role="none"
                 >
@@ -584,7 +590,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                     pressAnimationDelayMs={110}
                     className="h-[40px] flex-1 rounded-[8px] border border-[#E3E3E3] bg-white text-[#303030] hover:bg-[#F5F5F5] hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)] active:scale-[0.96] active:shadow-[0_3px_10px_rgba(0,0,0,0.06)] focus-visible:ring-2 focus-visible:ring-[#C530C5]/30"
                   >
-                    <p className="font-normal text-[16px] leading-[140%]">
+                    <p className="whitespace-nowrap font-normal text-[15px] leading-[140%] min-[360px]:text-[16px]">
                       Cancel
                     </p>
                   </Button>
@@ -606,7 +612,7 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
                         },
                       )}
                     >
-                      <p className="font-normal text-[16px] leading-[140%]">
+                      <p className="whitespace-nowrap font-normal text-[15px] leading-[140%] min-[360px]:text-[16px]">
                         Save
                       </p>
                     </Button>
