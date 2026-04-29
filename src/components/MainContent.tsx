@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { Button } from "./Button";
 import { GamificationBox } from "./GamificationBox";
 import { Grid } from "./Grid";
 import { GridMasks } from "./GridMasks";
-import { RewardSystemModal } from "./RewardSystemModal";
+const RewardSystemModal = lazy(() =>
+  import("./RewardSystemModal").then((module) => ({
+    default: module.RewardSystemModal,
+  })),
+);
 import TopBar from "./Topbar";
 import { NotificationToast } from "./ui/notification-toast";
 
@@ -50,17 +54,19 @@ export const MainContent: React.FC = () => {
             </div>
             <div className="pointer-events-none absolute inset-0 z-20 rounded-[16px] border-[0.68px] border-[#E3E3E3]" />
           </div>
-          <RewardSystemModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onCreateReward={() => {
-              setIsModalOpen(false);
-              setIsRewardCreatedNotificationOpen(false);
-              window.setTimeout(() => {
-                setIsRewardCreatedNotificationOpen(true);
-              }, 0);
-            }}
-          />
+          <Suspense fallback={null}>
+            <RewardSystemModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onCreateReward={() => {
+                setIsModalOpen(false);
+                setIsRewardCreatedNotificationOpen(false);
+                window.setTimeout(() => {
+                  setIsRewardCreatedNotificationOpen(true);
+                }, 0);
+              }}
+            />
+          </Suspense>
         </div>
       </div>
       <NotificationToast
