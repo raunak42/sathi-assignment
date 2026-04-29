@@ -1,5 +1,5 @@
 const gridColumns = 24;
-const gridRows = 8;
+const gridRows = 14;
 
 const gridCellColors: {
   x: number;

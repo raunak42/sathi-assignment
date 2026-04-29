@@ -3,7 +3,7 @@ import { Sidebar } from "./components/Sidebar";
 
 export default function App() {
   return (
-    <div className="w-screen h-screen flex">
+    <div className="flex min-h-screen w-full flex-col lg:h-screen lg:w-screen lg:flex-row">
       <Sidebar />
       <MainContent />
     </div>
