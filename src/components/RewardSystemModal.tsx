@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DisabledActionTooltip } from "./ui/disabled-action-tooltip";
 import { CommissionTierModal } from "./reward-system/CommissionTierModal";
 import {
@@ -38,13 +38,6 @@ export const RewardSystemModal: React.FC<RewardSystemModalProps> = ({
   const isCommissionTierRewardDisabled =
     rewardEvent === "Posts X times every Y period" ||
     rewardEvent === "Is Onboarded";
-
-  useEffect(() => {
-    if (isCommissionTierRewardDisabled && rewardWith === "Upgrade Commission Tier") {
-      setRewardWith("");
-      setIsCommissionTierModalOpen(false);
-    }
-  }, [isCommissionTierRewardDisabled, rewardWith]);
 
   const isRewardEventComplete =
     rewardEvent === "Cross $X in sales"
@@ -124,7 +117,18 @@ export const RewardSystemModal: React.FC<RewardSystemModalProps> = ({
             duration={duration}
             rewardEvents={rewardEvents}
             durationOptions={durationOptions}
-            onRewardEventChange={setRewardEvent}
+            onRewardEventChange={(event) => {
+              setRewardEvent(event);
+
+              if (
+                (event === "Posts X times every Y period" ||
+                  event === "Is Onboarded") &&
+                rewardWith === "Upgrade Commission Tier"
+              ) {
+                setRewardWith("");
+                setIsCommissionTierModalOpen(false);
+              }
+            }}
             onRewardDetailsSave={({ rewardAmount, postCount, duration }) => {
               setRewardAmount(rewardAmount);
               setPostCount(postCount);

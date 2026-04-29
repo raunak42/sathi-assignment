@@ -62,7 +62,7 @@ export const TimeBoundRewardField: React.FC<TimeBoundRewardFieldProps> = ({
     props: ButtonHTMLAttributes<HTMLButtonElement>,
     direction: "left" | "right",
   ) => {
-    const { className, children: _children, ...buttonProps } = props;
+    const { className, ...buttonProps } = props;
 
     return (
       <button
