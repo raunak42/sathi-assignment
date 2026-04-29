@@ -87,24 +87,27 @@ export const RewardEventField: React.FC<RewardEventFieldProps> = ({
   const salesTargetAmountError = getSalesTargetAmountError(draftRewardAmount);
   const postCountError = getPostCountError(draftPostCount);
   const isRewardEventSaveDisabled =
+    !rewardEvent ||
     (rewardEvent === "Cross $X in sales" &&
       (!draftRewardAmount.trim() || !!salesTargetAmountError)) ||
     (rewardEvent === "Posts X times every Y period" &&
       (!draftPostCount.trim() || !draftDuration.trim() || !!postCountError));
   const rewardEventSaveTooltipMessage =
-    rewardEvent === "Cross $X in sales"
-      ? salesTargetAmountError ??
-        (!draftRewardAmount.trim()
-          ? "Enter the sales target amount to continue"
-          : "Fill the required fields to continue")
-      : rewardEvent === "Posts X times every Y period"
-        ? postCountError ??
-          (!draftPostCount.trim()
-            ? "Enter the post count to continue"
-            : !draftDuration.trim()
-              ? "Select duration to continue"
-              : "Fill the required fields to continue")
-        : "Fill the required fields to continue";
+    !rewardEvent
+      ? "Select an event to continue"
+      : rewardEvent === "Cross $X in sales"
+        ? salesTargetAmountError ??
+          (!draftRewardAmount.trim()
+            ? "Enter the sales target amount to continue"
+            : "Fill the required fields to continue")
+        : rewardEvent === "Posts X times every Y period"
+          ? postCountError ??
+            (!draftPostCount.trim()
+              ? "Enter the post count to continue"
+              : !draftDuration.trim()
+                ? "Select duration to continue"
+                : "Fill the required fields to continue")
+          : "Fill the required fields to continue";
 
   const handleSave = () => {
     onRewardDetailsSave({
